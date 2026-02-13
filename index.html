@@ -273,23 +273,248 @@ nav a.active::after {
   border-radius: var(--radius-full);
 }
 
+/* ========================================
+   CLASSIC iOS SKEUOMORPHIC TOGGLE
+   ======================================== */
+.theme-toggle-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 12px;
+}
+
 .theme-toggle {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  position: relative;
+  width: 64px;
+  height: 32px;
+  border-radius: 32px;
+  border: none;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  background: linear-gradient(180deg, #e8eaed 0%, #d1d5db 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.15),
+    inset 0 -1px 2px rgba(255,255,255,.5),
+    0 1px 2px rgba(0,0,0,.1);
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+  padding: 0;
   font-family: inherit;
 }
 
+body.dark .theme-toggle {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.4),
+    inset 0 -1px 2px rgba(255,255,255,.05),
+    0 1px 2px rgba(0,0,0,.3);
+}
+
 .theme-toggle:hover {
-  background: var(--accent-light);
-  border-color: var(--accent-primary);
   transform: scale(1.05);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.2),
+    inset 0 -1px 2px rgba(255,255,255,.6),
+    0 2px 4px rgba(0,0,0,.15);
+}
+
+body.dark .theme-toggle:hover {
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.5),
+    inset 0 -1px 2px rgba(255,255,255,.1),
+    0 2px 4px rgba(0,0,0,.4);
+}
+
+.theme-toggle:active {
+  transform: scale(.98);
+}
+
+/* Toggle Track */
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #cbd5e1 0%, #e2e8f0 100%);
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+}
+
+body.dark .theme-toggle::before {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Toggle Knob */
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fef3c7 0%, #fbbf24 100%);
+  box-shadow:
+    0 2px 8px rgba(251,191,36,.4),
+    inset 0 1px 2px rgba(255,255,255,.8),
+    inset 0 -1px 2px rgba(0,0,0,.1);
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  z-index: 2;
+}
+
+body.dark .theme-toggle::after {
+  transform: translateX(32px);
+  background: linear-gradient(180deg, #f1f5f9 0%, #cbd5e1 100%);
+  box-shadow:
+    0 2px 8px rgba(203,213,225,.3),
+    inset 0 1px 2px rgba(255,255,255,.6),
+    inset 0 -1px 2px rgba(0,0,0,.2);
+}
+
+/* Sun Icon (Light Mode) */
+.toggle-icon-sun {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.dark .toggle-icon-sun {
+  opacity: 0;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.toggle-icon-sun::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px rgba(251,191,36,.6);
+}
+
+/* Sun rays */
+.toggle-icon-sun::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 -6px 0 0 #fbbf24,
+    0 6px 0 0 #fbbf24,
+    6px 0 0 0 #fbbf24,
+    -6px 0 0 0 #fbbf24,
+    4px -4px 0 0 #fbbf24,
+    4px 4px 0 0 #fbbf24,
+    -4px -4px 0 0 #fbbf24,
+    -4px 4px 0 0 #fbbf24;
+}
+
+/* Moon Icon (Dark Mode) */
+.toggle-icon-moon {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  transform: translateY(-50%) rotate(0deg);
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: all .4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.dark .toggle-icon-moon {
+  opacity: 1;
+  transform: translateY(-50%) rotate(360deg);
+}
+
+.toggle-icon-moon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 30% 30%, #e2e8f0 0%, #cbd5e1 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    inset -2px -2px 3px rgba(0,0,0,.2),
+    0 0 4px rgba(226,232,240,.4);
+}
+
+/* Moon craters */
+.toggle-icon-moon::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(circle, rgba(0,0,0,.1) 0%, transparent 70%);
+  border-radius: 50%;
+  box-shadow:
+    4px 3px 0 0 rgba(0,0,0,.08),
+    2px 5px 0 -1px rgba(0,0,0,.06);
+}
+
+/* Stars */
+.toggle-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+
+body.dark .toggle-stars {
+  opacity: 1;
+}
+
+.toggle-stars::before,
+.toggle-stars::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(241,245,249,.8);
+}
+
+.toggle-stars::before {
+  top: 8px;
+  left: 10px;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.toggle-stars::after {
+  top: 18px;
+  left: 15px;
+  animation: twinkle 2s ease-in-out infinite .5s;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
 }
 
 /* Mobile Menu */
@@ -789,9 +1014,13 @@ body.dark .article pre {
     <a href="/" data-link aria-label="Navigate to home page">Home</a>
     <a href="/projects" data-link aria-label="Navigate to blog posts">Blog</a>
     <a href="/about" data-link aria-label="Navigate to about page">About</a>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-      <span id="themeIcon">🌙</span>
-    </button>
+    <div class="theme-toggle-wrapper">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span class="toggle-icon-sun"></span>
+        <span class="toggle-icon-moon"></span>
+        <span class="toggle-stars"></span>
+      </button>
+    </div>
   </div>
   <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
     <span></span>
@@ -933,7 +1162,6 @@ function toggleTheme() {
   
   const isDark = document.body.classList.contains('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
   
   showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
 }
@@ -942,7 +1170,6 @@ function toggleTheme() {
 if (localStorage.getItem('theme') === 'dark' || 
     (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
   document.body.classList.add('dark');
-  document.getElementById('themeIcon').textContent = '☀️';
 }
 
 // ========================================
@@ -1360,7 +1587,7 @@ if ('PerformanceObserver' in window) {
   }
 }
 
-console.log('✨ Website initialized');
+console.log('✨ Website initialized with Classic iOS toggle');
 </script>
 
 </body>
