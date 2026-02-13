@@ -1,11 +1,256 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
+
 <head>
   <meta charset="UTF-8">
-  <title>我的个人网站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YourName</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f5f3;
+      --text: #111;
+      --card: rgba(255, 255, 255, 0.7);
+      --border: rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark {
+      --bg: #0e0e0e;
+      --text: #f2f2f2;
+      --card: rgba(20, 20, 20, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.6s cubic-bezier(.22, 1, .36, 1),
+        color 0.6s cubic-bezier(.22, 1, .36, 1);
+      overflow-x: hidden;
+    }
+
+    /* 丝滑动画曲线 */
+    .smooth {
+      transition: all 0.7s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    /* 顶部导航 */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 60px;
+      position: fixed;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      margin-left: 40px;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    nav a:hover {
+      opacity: 1;
+    }
+
+    /* 暗黑按钮 */
+    .toggle {
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    /* 页面容器 */
+    .page {
+      min-height: 100vh;
+      padding: 180px 80px 120px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .page.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Hero */
+    .hero h1 {
+      font-size: 80px;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 22px;
+      opacity: 0.6;
+    }
+
+    /* 卡片 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 50px;
+      margin-top: 80px;
+    }
+
+    .card {
+      padding: 50px;
+      border-radius: 30px;
+      backdrop-filter: blur(20px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.7s cubic-bezier(.22, 1, .36, 1),
+        box-shadow 0.7s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    }
+
+    /* 背景渐变 */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(200, 200, 200, 0.2), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(150, 150, 150, 0.15), transparent 40%);
+      animation: float 14s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(-60px);
+      }
+    }
+
+    @media(max-width:768px) {
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      nav {
+        padding: 20px 30px;
+      }
+
+      .page {
+        padding: 150px 30px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello World</h1>
-  <p>这是我的第一个 GitHub Pages 网站</p>
+
+  <div class="bg-gradient"></div>
+
+  <nav>
+    <div><strong>SalixWen</strong></div>
+    <div>
+      <a href="/" data-link>Home</a>
+      <a href="/projects" data-link>Projects</a>
+      <a href="/about" data-link>About</a>
+      <span class="toggle" onclick="toggleDark()">Dark</span>
+    </div>
+  </nav>
+
+  <!-- 页面 -->
+  <div id="home" class="page active">
+    <div class="hero">
+      <h1>Clarity.<br>Precision.<br>Experience.</h1>
+      <p>Minimal · Development · Security</p>
+    </div>
+  </div>
+
+  <div id="projects" class="page">
+    <h1>Selected Work</h1>
+    <div class="grid">
+      <div class="card">
+        <h3>Inventory System</h3>
+        <p>Qt 构建 · 数据可视化 · 销售分析</p>
+      </div>
+      <div class="card">
+        <h3>Design System</h3>
+        <p>极简组件体系 · 高级灰视觉架构</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="about" class="page">
+    <h1>About</h1>
+    <p style="margin-top:30px;max-width:600px;opacity:.6;">
+      专注系统架构与高质量软件开发。
+      强调优雅、长期可维护与高级体验。
+    </p>
+  </div>
+
+  <script>
+    /* 暗黑模式记忆 */
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("theme",
+        document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+    }
+
+    /* SPA 路由 */
+    function router(path) {
+      document.querySelectorAll(".page").forEach(p => {
+        p.classList.remove("active");
+      });
+
+      if (path === "/projects") {
+        document.getElementById("projects").classList.add("active");
+      } else if (path === "/about") {
+        document.getElementById("about").classList.add("active");
+      } else {
+        document.getElementById("home").classList.add("active");
+      }
+    }
+
+    document.querySelectorAll("[data-link]").forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const url = e.target.getAttribute("href");
+        history.pushState(null, null, url);
+        router(url);
+      });
+    });
+
+    window.addEventListener("popstate", () => {
+      router(location.pathname);
+    });
+  </script>
+
 </body>
+
 </html>
