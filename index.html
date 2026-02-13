@@ -1,9 +1,264 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh">
+
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人技术空间</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0e0e10;
+            --card: #1a1a1f;
+            --text: #ffffff;
+            --muted: rgba(255, 255, 255, .6);
+            --accent: #7c5cff;
+        }
+
+        .light {
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --text: #111;
+            --muted: #555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: .4s;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 30px;
+            opacity: .6;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        .toggle {
+            cursor: pointer;
+            margin-left: 30px;
+        }
+
+        main {
+            padding-top: 100px;
+            max-width: 1100px;
+            margin: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        /* 页面 */
+        .page {
+            display: none;
+            animation: fade .6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* 卡片 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 20px;
+            transition: .4s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 120px 0;
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            margin-top: 20px;
+            font-size: 20px;
+            color: var(--muted);
+        }
+
+        /* 文章页 */
+        .article {
+            max-width: 800px;
+            line-height: 1.8;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            cursor: pointer;
+            color: var(--muted);
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Welcome to My Website</h1>
-    <p>This is the previous version of the index.html file.</p>
+
+    <nav>
+        <div><strong>MyTech</strong></div>
+        <div>
+            <a onclick="go('home')">首页</a>
+            <a onclick="go('blog')">博客</a>
+            <a onclick="go('links')">导航</a>
+            <a onclick="go('about')">关于</a>
+            <span class="toggle" onclick="toggleTheme()">🌓</span>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- 首页 -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>构建 · 分享 · 进化</h1>
+                <p>个人技术博客 · 项目实验室 · 自建书签导航</p>
+            </div>
+        </div>
+
+        <!-- 博客 -->
+        <div id="blog" class="page">
+            <h2>技术文章</h2>
+            <div class="grid" id="blogList"></div>
+        </div>
+
+        <!-- 导航 -->
+        <div id="links" class="page">
+            <h2>常用导航</h2>
+            <div class="grid" id="linkList"></div>
+        </div>
+
+        <!-- 关于 -->
+        <div id="about" class="page">
+            <h2>关于我</h2>
+            <p style="margin-top:20px;color:var(--muted)">
+                分享技术 · 构建工具 · 打磨体验。
+            </p>
+        </div>
+
+        <!-- 文章详情 -->
+        <div id="articlePage" class="page">
+            <div class="article">
+                <div class="back" onclick="go('blog')">← 返回</div>
+                <h2 id="articleTitle"></h2>
+                <p id="articleContent" style="margin-top:20px;"></p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        /* ========== 路由系统 ========== */
+        function go(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ========== 暗黑切换 ========== */
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme',
+                document.body.classList.contains('light') ? 'light' : 'dark');
+        }
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light');
+        }
+
+        /* ========== 博客数据 ========== */
+        const blogs = [
+            {
+                title: "WebGL 动画实践",
+                content: "深入讲解如何构建 GPU 渲染背景与动画系统..."
+            },
+            {
+                title: "前端架构设计",
+                content: "如何设计可扩展的个人博客系统结构..."
+            }
+        ];
+
+        const blogList = document.getElementById('blogList');
+        blogs.forEach((b, i) => {
+            const div = document.createElement('div');
+            div.className = "card";
+            div.innerHTML = `<h3>${b.title}</h3>`;
+            div.onclick = () => {
+                document.getElementById('articleTitle').innerText = b.title;
+                document.getElementById('articleContent').innerText = b.content;
+                go('articlePage');
+            };
+            blogList.appendChild(div);
+        });
+
+        /* ========== 导航数据 ========== */
+        const links = [
+            { name: "GitHub", url: "https://github.com" },
+            { name: "MDN", url: "https://developer.mozilla.org" },
+            { name: "Vercel", url: "https://vercel.com" }
+        ];
+
+        const linkList = document.getElementById('linkList');
+        links.forEach(l => {
+            const div = document.createElement('div');
+            div.className = "card";
+            div.innerHTML = `<h3>${l.name}</h3>`;
+            div.onclick = () => window.open(l.url);
+            linkList.appendChild(div);
+        });
+    </script>
+
 </body>
+
 </html>
