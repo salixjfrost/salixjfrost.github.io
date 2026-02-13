@@ -1,264 +1,280 @@
 <!DOCTYPE html>
 <html lang="zh">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人技术空间</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalixWen - Blog</title>
 
-    <style>
-        :root {
-            --bg: #0e0e10;
-            --card: #1a1a1f;
-            --text: #ffffff;
-            --muted: rgba(255, 255, 255, .6);
-            --accent: #7c5cff;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css">
 
-        .light {
-            --bg: #f5f5f7;
-            --card: #ffffff;
-            --text: #111;
-            --muted: #555;
-        }
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+:root{
+  --bg:#f5f5f3;
+  --text:#111;
+  --card:rgba(255,255,255,.7);
+  --border:rgba(0,0,0,.08);
+}
+body.dark{
+  --bg:#0e0e0e;
+  --text:#f2f2f2;
+  --card:rgba(20,20,20,.7);
+  --border:rgba(255,255,255,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:.6s cubic-bezier(.22,1,.36,1);
+  overflow:hidden;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            transition: .4s;
-            overflow-x: hidden;
-        }
+/* Apple级丝滑滚动容器 */
+.scroll-container{
+  position:fixed;
+  width:100%;
+  will-change:transform;
+}
 
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 60px;
-            display: flex;
-            justify-content: space-between;
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-        }
+/* 导航 */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:30px 60px;
+  position:fixed;
+  width:100%;
+  backdrop-filter:blur(20px);
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+nav a{
+  text-decoration:none;
+  color:var(--text);
+  margin-left:40px;
+  opacity:.8;
+  font-weight:500;
+}
+nav a:hover{opacity:1;}
+.toggle{
+  cursor:pointer;
+  padding:8px 14px;
+  border-radius:30px;
+  border:1px solid var(--border);
+}
 
-        nav a {
-            color: var(--text);
-            text-decoration: none;
-            margin-left: 30px;
-            opacity: .6;
-            transition: .3s;
-        }
+/* 页面 */
+.page{
+  min-height:100vh;
+  padding:180px 80px 120px;
+  opacity:0;
+  transform:translateY(40px);
+  transition:.8s cubic-bezier(.22,1,.36,1);
+}
+.page.active{
+  opacity:1;
+  transform:translateY(0);
+}
 
-        nav a:hover {
-            opacity: 1;
-        }
+/* Hero */
+.hero h1{font-size:80px;letter-spacing:-2px;}
+.hero p{font-size:22px;opacity:.6;margin-top:20px;}
 
-        .toggle {
-            cursor: pointer;
-            margin-left: 30px;
-        }
+/* 卡片 */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:40px;
+  margin-top:60px;
+}
+.card{
+  padding:40px;
+  border-radius:30px;
+  backdrop-filter:blur(20px);
+  background:var(--card);
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:.7s cubic-bezier(.22,1,.36,1);
+}
+.card:hover{
+  transform:translateY(-12px) scale(1.02);
+  box-shadow:0 30px 80px rgba(0,0,0,.15);
+}
 
-        main {
-            padding-top: 100px;
-            max-width: 1100px;
-            margin: auto;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
+/* 搜索 */
+.search{
+  margin-top:40px;
+  padding:12px 20px;
+  border-radius:30px;
+  border:1px solid var(--border);
+  width:300px;
+  background:var(--card);
+  color:var(--text);
+}
 
-        /* 页面 */
-        .page {
-            display: none;
-            animation: fade .6s ease;
-        }
+/* 标签 */
+.tags{margin-top:20px;}
+.tag{
+  display:inline-block;
+  padding:6px 12px;
+  margin:6px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  font-size:12px;
+}
 
-        .page.active {
-            display: block;
-        }
+/* 文章页 */
+.article{
+  max-width:800px;
+  line-height:1.8;
+}
+.article img{max-width:100%;border-radius:10px;margin:10px 0;}
+.back{margin-bottom:30px;cursor:pointer;opacity:.6;}
 
-        @keyframes fade {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: none;
-            }
-        }
-
-        /* 卡片 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .card {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 20px;
-            transition: .4s;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-        }
-
-        /* Hero */
-        .hero {
-            padding: 120px 0;
-        }
-
-        .hero h1 {
-            font-size: 60px;
-            font-weight: 800;
-        }
-
-        .hero p {
-            margin-top: 20px;
-            font-size: 20px;
-            color: var(--muted);
-        }
-
-        /* 文章页 */
-        .article {
-            max-width: 800px;
-            line-height: 1.8;
-        }
-
-        .back {
-            margin-bottom: 30px;
-            cursor: pointer;
-            color: var(--muted);
-        }
-    </style>
+/* 代码高亮 */
+pre{border-radius:12px;overflow-x:auto;margin:20px 0;}
+code{font-size:14px;}
+</style>
 </head>
 
 <body>
 
-    <nav>
-        <div><strong>MyTech</strong></div>
-        <div>
-            <a onclick="go('home')">首页</a>
-            <a onclick="go('blog')">博客</a>
-            <a onclick="go('links')">导航</a>
-            <a onclick="go('about')">关于</a>
-            <span class="toggle" onclick="toggleTheme()">🌓</span>
-        </div>
-    </nav>
+<nav>
+<div><strong>SalixWen</strong></div>
+<div>
+<a href="/" data-link>Home</a>
+<a href="/projects" data-link>Blog</a>
+<a href="/about" data-link>About</a>
+<span class="toggle" onclick="toggleDark()">Dark</span>
+</div>
+</nav>
 
-    <main>
+<div class="scroll-container" id="scrollContainer">
 
-        <!-- 首页 -->
-        <div id="home" class="page active">
-            <div class="hero">
-                <h1>构建 · 分享 · 进化</h1>
-                <p>个人技术博客 · 项目实验室 · 自建书签导航</p>
-            </div>
-        </div>
+<div id="home" class="page active">
+<div class="hero">
+<h1>Clarity.<br>Precision.<br>Experience.</h1>
+<p>Minimal · Development · Security</p>
+</div>
+</div>
 
-        <!-- 博客 -->
-        <div id="blog" class="page">
-            <h2>技术文章</h2>
-            <div class="grid" id="blogList"></div>
-        </div>
+<div id="projects" class="page">
+<h1>Blog</h1>
+<input class="search" placeholder="Search..." oninput="searchPosts(this.value)">
+<div class="tags" id="tagContainer"></div>
+<div class="grid" id="postList"></div>
+</div>
 
-        <!-- 导航 -->
-        <div id="links" class="page">
-            <h2>常用导航</h2>
-            <div class="grid" id="linkList"></div>
-        </div>
+<div id="about" class="page">
+<h1>About</h1>
+<p style="margin-top:30px;max-width:600px;opacity:.6;">
+专注系统架构与高质量软件开发。
+</p>
+</div>
 
-        <!-- 关于 -->
-        <div id="about" class="page">
-            <h2>关于我</h2>
-            <p style="margin-top:20px;color:var(--muted)">
-                分享技术 · 构建工具 · 打磨体验。
-            </p>
-        </div>
+<div id="articlePage" class="page">
+<div class="article">
+<div class="back" onclick="go('/projects')">← 返回</div>
+<h1 id="articleTitle"></h1>
+<div id="articleContent" style="margin-top:30px;"></div>
+</div>
+</div>
 
-        <!-- 文章详情 -->
-        <div id="articlePage" class="page">
-            <div class="article">
-                <div class="back" onclick="go('blog')">← 返回</div>
-                <h2 id="articleTitle"></h2>
-                <p id="articleContent" style="margin-top:20px;"></p>
-            </div>
-        </div>
+</div>
 
-    </main>
+<script>
+/* Apple级惯性滚动 */
+let scrollY=0,targetY=0;
+const container=document.getElementById("scrollContainer");
+document.body.style.height=container.getBoundingClientRect().height+"px";
+window.addEventListener("scroll",()=>targetY=window.scrollY);
+function smoothScroll(){
+scrollY+=(targetY-scrollY)*0.08;
+container.style.transform=`translateY(-${scrollY}px)`;
+requestAnimationFrame(smoothScroll);
+}
+smoothScroll();
 
-    <script>
-        /* ========== 路由系统 ========== */
-        function go(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+/* 暗黑 */
+function toggleDark(){
+document.body.classList.toggle("dark");
+localStorage.setItem("theme",
+document.body.classList.contains("dark")?"dark":"light");
+}
+if(localStorage.getItem("theme")==="dark"){
+document.body.classList.add("dark");
+}
 
-        /* ========== 暗黑切换 ========== */
-        function toggleTheme() {
-            document.body.classList.toggle('light');
-            localStorage.setItem('theme',
-                document.body.classList.contains('light') ? 'light' : 'dark');
-        }
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.classList.add('light');
-        }
+/* SPA 路由 */
+function go(path){
+history.pushState(null,null,path);
+router(path);
+}
+function router(path){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+if(path==="/about"){document.getElementById("about").classList.add("active");}
+else if(path==="/projects"){document.getElementById("projects").classList.add("active");}
+else if(path.startsWith("/post")){document.getElementById("articlePage").classList.add("active");}
+else{document.getElementById("home").classList.add("active");}
+window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-link]").forEach(link=>{
+link.addEventListener("click",e=>{
+e.preventDefault();
+go(link.getAttribute("href"));
+});
+});
+window.addEventListener("popstate",()=>router(location.pathname));
 
-        /* ========== 博客数据 ========== */
-        const blogs = [
-            {
-                title: "WebGL 动画实践",
-                content: "深入讲解如何构建 GPU 渲染背景与动画系统..."
-            },
-            {
-                title: "前端架构设计",
-                content: "如何设计可扩展的个人博客系统结构..."
-            }
-        ];
+/* 博客数据 */
+const posts=[
+{title:"WebGL 实践",tags:["WebGL","Graphics"],content:`# WebGL 实践\n使用 GPU 构建高性能动画系统。\n\n## 优势\n- 性能极高\n- 可扩展`},
+{title:"前端架构设计",tags:["Frontend","Architecture"],content:`# 架构设计\n构建可扩展系统。\n\`\`\`js\nconsole.log("Hello");\n\`\`\``},
+{title:"自建书签导航系统",tags:["Tools","Frontend"],content:`# 书签导航\n创建个人收藏站，实现快速访问和管理。`}
+];
 
-        const blogList = document.getElementById('blogList');
-        blogs.forEach((b, i) => {
-            const div = document.createElement('div');
-            div.className = "card";
-            div.innerHTML = `<h3>${b.title}</h3>`;
-            div.onclick = () => {
-                document.getElementById('articleTitle').innerText = b.title;
-                document.getElementById('articleContent').innerText = b.content;
-                go('articlePage');
-            };
-            blogList.appendChild(div);
-        });
+/* 渲染文章列表 */
+const postList=document.getElementById("postList");
+const tagContainer=document.getElementById("tagContainer");
+function renderPosts(filterTag=null,search=""){
+postList.innerHTML="";
+posts
+.filter(p=>(!filterTag||p.tags.includes(filterTag)) &&
+p.title.toLowerCase().includes(search.toLowerCase()))
+.forEach((p,i)=>{
+const div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<h3>${p.title}</h3><p style="opacity:.6;margin-top:10px">${p.tags.join(", ")}</p>`;
+div.onclick=()=>{
+document.getElementById("articleTitle").innerText=p.title;
+document.getElementById("articleContent").innerHTML=marked.parse(p.content);
+go("/post/"+i);
+Prism.highlightAll();
+};
+postList.appendChild(div);
+});
+}
 
-        /* ========== 导航数据 ========== */
-        const links = [
-            { name: "GitHub", url: "https://github.com" },
-            { name: "MDN", url: "https://developer.mozilla.org" },
-            { name: "Vercel", url: "https://vercel.com" }
-        ];
+/* 标签 */
+const allTags=[...new Set(posts.flatMap(p=>p.tags))];
+allTags.forEach(tag=>{
+const span=document.createElement("span");
+span.className="tag";
+span.innerText=tag;
+span.onclick=()=>renderPosts(tag);
+tagContainer.appendChild(span);
+});
 
-        const linkList = document.getElementById('linkList');
-        links.forEach(l => {
-            const div = document.createElement('div');
-            div.className = "card";
-            div.innerHTML = `<h3>${l.name}</h3>`;
-            div.onclick = () => window.open(l.url);
-            linkList.appendChild(div);
-        });
-    </script>
+/* 搜索 */
+function searchPosts(value){renderPosts(null,value);}
+renderPosts();
+</script>
 
 </body>
-
 </html>
