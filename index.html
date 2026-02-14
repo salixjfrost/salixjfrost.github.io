@@ -560,6 +560,94 @@ body.dark .toggle-stars {
 .hero {
   max-width: 900px;
   animation: heroFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+  position: relative;
+  z-index: 2;
+}
+
+/* Decorative Background Elements */
+.hero-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob-1 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle at 30% 30%, rgba(29, 155, 240, 0.08), transparent 70%);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  top: -100px;
+  right: -100px;
+  animation: float 20s ease-in-out infinite;
+}
+
+.blob-2 {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at 30% 30%, rgba(29, 155, 240, 0.06), transparent 70%);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  bottom: 10%;
+  left: 5%;
+  animation: float 25s ease-in-out infinite reverse;
+}
+
+.blob-3 {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle at 30% 30%, rgba(29, 155, 240, 0.05), transparent 70%);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  top: 50%;
+  right: 10%;
+  animation: float 30s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-40px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-20px) translateX(15px);
+  }
+}
+
+body.dark .blob-1,
+body.dark .blob-2,
+body.dark .blob-3 {
+  background-image: none;
+  opacity: 0.5;
+}
+
+/* Grid Background */
+.grid-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(29, 155, 240, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 155, 240, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  top: 0;
+  left: 0;
+}
+
+body.dark .grid-background {
+  background-image:
+    linear-gradient(rgba(29, 155, 240, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 155, 240, 0.05) 1px, transparent 1px);
 }
 
 .hero h1 {
@@ -580,6 +668,138 @@ body.dark .toggle-stars {
   color: var(--text-secondary);
   font-weight: 400;
   letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Hero CTA Buttons */
+.hero-cta {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  flex-wrap: wrap;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  border: 2px solid;
+  cursor: pointer;
+}
+
+.cta-button.primary {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.cta-button.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(29, 155, 240, 0.3);
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--card-border);
+}
+
+.cta-button.secondary:hover {
+  background: var(--card-bg);
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Featured Section */
+.featured-section {
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 1px solid var(--card-border);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+}
+
+.featured-section h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xl);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.featured-card {
+  padding: var(--spacing-lg);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  animation: cardFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.featured-card:nth-child(1) { animation-delay: 0.5s; }
+.featured-card:nth-child(2) { animation-delay: 0.6s; }
+.featured-card:nth-child(3) { animation-delay: 0.7s; }
+
+.featured-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-primary);
+}
+
+.featured-card-date {
+  font-size: 12px;
+  color: var(--accent-primary);
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+}
+
+.featured-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.featured-card p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  flex-grow: 1;
+  margin-bottom: var(--spacing-md);
+}
+
+.featured-card-tags {
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.featured-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--accent-light);
+  color: var(--accent-primary);
+  font-size: 12px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 @keyframes heroFadeIn {
@@ -937,36 +1157,71 @@ body.dark .article pre {
   :root {
     --spacing-2xl: 24px;
   }
-  
+
   nav {
     padding: var(--spacing-md);
   }
-  
+
   .nav-links a {
     display: none;
   }
-  
+
   .mobile-menu-toggle {
     display: flex;
   }
-  
+
   .page {
     padding: calc(60px + var(--spacing-lg)) var(--spacing-md) var(--spacing-lg);
   }
-  
+
   .grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
   }
-  
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .cta-button {
+    width: 100%;
+  }
+
   .search {
     max-width: 100%;
   }
-  
+
   .toast {
     left: var(--spacing-md);
     right: var(--spacing-md);
     bottom: var(--spacing-md);
+  }
+
+  .blob-1 {
+    width: 250px;
+    height: 250px;
+    top: -50px;
+    right: -50px;
+  }
+
+  .blob-2 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .blob-3 {
+    width: 150px;
+    height: 150px;
+  }
+
+  .featured-section h2,
+  .section-title {
+    font-size: 24px;
   }
 }
 
@@ -1063,6 +1318,14 @@ body.dark .article pre {
 <!-- Scroll Container -->
 <div class="scroll-container" id="scrollContainer">
 
+  <!-- Background Decorations -->
+  <div class="hero-background" id="heroBackground">
+    <div class="grid-background"></div>
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+    <div class="blob-3"></div>
+  </div>
+
   <!-- Home Page -->
   <div id="home" class="page active" role="main">
     <div class="hero">
@@ -1072,6 +1335,16 @@ body.dark .article pre {
         </span>
       </h1>
       <p>Minimal · Development · Security</p>
+      <div class="hero-cta">
+        <a href="/blog/" class="cta-button primary">Explore Articles</a>
+        <a href="/about/" class="cta-button secondary">Learn More</a>
+      </div>
+    </div>
+
+    <!-- Featured Section -->
+    <div class="featured-section">
+      <h2>Latest Articles</h2>
+      <div class="featured-grid" id="featuredPosts"></div>
     </div>
   </div>
 
@@ -1589,7 +1862,40 @@ window.addEventListener('offline', () => {
 // ========================================
 // Initialize
 // ========================================
+function initializeFeaturedPosts() {
+  const featuredPosts = document.getElementById('featuredPosts');
+  if (!featuredPosts) return;
+
+  const featured = posts.slice(0, 3);
+
+  featured.forEach((post, index) => {
+    const card = document.createElement('article');
+    card.className = 'featured-card';
+    card.setAttribute('role', 'article');
+
+    const dateObj = new Date(post.date);
+    const formattedDate = dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+
+    card.innerHTML = `
+      <div class="featured-card-date">${formattedDate}</div>
+      <h3>${post.title}</h3>
+      <p>${post.content.split('\n')[0].replace(/^# /, '').substring(0, 100)}...</p>
+      <div class="featured-card-tags">
+        ${post.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+      </div>
+    `;
+
+    card.addEventListener('click', () => showArticle(post));
+    featuredPosts.appendChild(card);
+  });
+}
+
 renderPosts();
+initializeFeaturedPosts();
 router(location.pathname);
 
 // Performance monitoring
