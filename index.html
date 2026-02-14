@@ -517,7 +517,54 @@ body.dark .toggle-stars {
   50% { opacity: 1; }
 }
 
-/* Mobile Menu */
+/* ========================================
+   Language Selector
+   ======================================== */
+.language-selector-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 12px;
+}
+
+.language-selector {
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 130px;
+}
+
+.language-selector:hover {
+  border-color: var(--accent-primary);
+  background: var(--card-hover);
+}
+
+.language-selector:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.language-selector option {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 8px;
+}
+
+body.dark .language-selector option {
+  background: #1e293b;
+  color: #e7e9ea;
+}
+
+/* ========================================
+   Mobile Menu
+   ======================================== */
 .mobile-menu-toggle {
   display: none;
   flex-direction: column;
@@ -1307,6 +1354,14 @@ body.dark .article pre {
         <span class="toggle-stars"></span>
       </button>
     </div>
+    <div class="language-selector-wrapper">
+      <select id="languageSelector" class="language-selector" onchange="setLanguage(this.value)" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="zh_CN">简体中文</option>
+        <option value="zh_TW">繁體中文</option>
+      </select>
+    </div>
   </div>
   <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
     <span></span>
@@ -1570,6 +1625,179 @@ function updateMetaTags(page) {
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.content = info.description;
 }
+
+// ========================================
+// Language & Translations System
+// ========================================
+const translations = {
+  en: {
+    nav_home: 'Home',
+    nav_blog: 'Blog',
+    nav_about: 'About',
+    language_label: 'Language',
+    hero_tagline: 'Minimal · Development · Security',
+    hero_cta_explore: 'Explore Articles',
+    hero_cta_learn: 'Learn More',
+    featured_heading: 'Latest Articles',
+    back_button: '← Back',
+    blog_heading: 'Blog',
+    blog_tagline: 'Technical insights about web development, architecture, and security',
+    search_placeholder: 'Search articles...',
+    empty_state: 'No articles found. Try adjusting your search or filters.',
+    article_source: 'Source'
+  },
+  ja: {
+    nav_home: 'ホーム',
+    nav_blog: 'ブログ',
+    nav_about: 'について',
+    language_label: '言語',
+    hero_tagline: 'ミニマル · 開発 · セキュリティ',
+    hero_cta_explore: '記事を探索',
+    hero_cta_learn: 'もっと詳しく',
+    featured_heading: '最新記事',
+    back_button: '← 戻る',
+    blog_heading: 'ブログ',
+    blog_tagline: 'Web開発、アーキテクチャ、セキュリティに関する技術的洞察',
+    search_placeholder: '記事を検索...',
+    empty_state: '記事が見つかりません。検索またはフィルターを調整してください。',
+    article_source: 'ソース'
+  },
+  zh_CN: {
+    nav_home: '首页',
+    nav_blog: '博客',
+    nav_about: '关于',
+    language_label: '语言',
+    hero_tagline: '极简 · 开发 · 安全',
+    hero_cta_explore: '浏览文章',
+    hero_cta_learn: '了解更多',
+    featured_heading: '最新文章',
+    back_button: '← 返回',
+    blog_heading: '博客',
+    blog_tagline: '关于网页开发、架构和安全的技术见解',
+    search_placeholder: '搜索文章...',
+    empty_state: '未找到文章。请尝试调整搜索或筛选条件。',
+    article_source: '来源'
+  },
+  zh_TW: {
+    nav_home: '首頁',
+    nav_blog: '部落格',
+    nav_about: '關於',
+    language_label: '語言',
+    hero_tagline: '簡潔 · 開發 · 安全',
+    hero_cta_explore: '瀏覽文章',
+    hero_cta_learn: '了解更多',
+    featured_heading: '最新文章',
+    back_button: '← 返回',
+    blog_heading: '部落格',
+    blog_tagline: '關於網頁開發、架構和安全的技術見解',
+    search_placeholder: '搜尋文章...',
+    empty_state: '未找到文章。請嘗試調整搜尋或篩選條件。',
+    article_source: '來源'
+  }
+};
+
+// Get current language from localStorage or browser preference
+let currentLanguage = localStorage.getItem('language');
+if (!currentLanguage) {
+  const browserLang = navigator.language.split('-')[0];
+  if (browserLang === 'ja') currentLanguage = 'ja';
+  else if (browserLang === 'zh') {
+    const fullLang = navigator.language;
+    currentLanguage = fullLang.includes('HK') || fullLang.includes('TW') ? 'zh_TW' : 'zh_CN';
+  } else {
+    currentLanguage = 'en';
+  }
+  localStorage.setItem('language', currentLanguage);
+}
+
+// Translation getter function
+function getTranslation(key) {
+  return translations[currentLanguage]?.[key] || translations.en[key] || key;
+}
+
+// Update language
+function setLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem('language', lang);
+  updateLanguageUI();
+}
+
+// Update all UI text based on current language
+function updateLanguageUI() {
+  // Nav links
+  document.querySelectorAll('nav a').forEach(link => {
+    if (link.getAttribute('href') === '/') link.textContent = getTranslation('nav_home');
+    else if (link.getAttribute('href') === '/blog/') link.textContent = getTranslation('nav_blog');
+    else if (link.getAttribute('href').includes('about')) link.textContent = getTranslation('nav_about');
+  });
+
+  // Language selector
+  const langSelector = document.getElementById('languageSelector');
+  if (langSelector) langSelector.value = currentLanguage;
+
+  // Hero elements
+  const heroTagline = document.querySelector('.hero p:not(.article p)');
+  if (heroTagline && !heroTagline.closest('.article')) {
+    heroTagline.textContent = getTranslation('hero_tagline');
+  }
+
+  const ctaButtons = document.querySelectorAll('.cta-button');
+  if (ctaButtons.length >= 2) {
+    ctaButtons[0].textContent = getTranslation('hero_cta_explore');
+    ctaButtons[1].textContent = getTranslation('hero_cta_learn');
+  }
+
+  // Featured section
+  const featuredHeading = document.querySelector('.featured-section h2');
+  if (featuredHeading) featuredHeading.textContent = getTranslation('featured_heading');
+
+  // Back button
+  const backButton = document.querySelector('.back-button');
+  if (backButton) backButton.innerHTML = getTranslation('back_button');
+
+  // Blog page elements
+  const blogHeading = document.querySelector('#projects > h1');
+  if (blogHeading) blogHeading.textContent = getTranslation('blog_heading');
+
+  const searchInput = document.querySelector('.search');
+  if (searchInput) searchInput.placeholder = getTranslation('search_placeholder');
+
+  const BlogTagline = document.querySelector('#projects > p');
+  if (BlogTagline) BlogTagline.textContent = getTranslation('blog_tagline');
+
+  const emptyState = document.getElementById('emptyState');
+  if (emptyState) emptyState.querySelector('p').textContent = getTranslation('empty_state');
+}
+
+// ========================================
+// Featured External Articles
+// ========================================
+const featuredArticles = [
+  {
+    title: 'The future of web development with AI assistants',
+    source: 'TechCrunch',
+    date: '2026-02-12',
+    excerpt: 'Exploring how AI is transforming the web development landscape and helping developers build faster, smarter applications.',
+    url: 'https://techcrunch.com/2026/02/12/ai-web-development/',
+    tags: ['AI', 'Web Development']
+  },
+  {
+    title: 'Understanding modern browser security features',
+    source: 'BBC News',
+    date: '2026-02-11',
+    excerpt: 'A deep dive into the latest security improvements in modern web browsers and how they protect your data while browsing.',
+    url: 'https://www.bbc.com/future/article/20260211-browser-security',
+    tags: ['Security', 'Browsers']
+  },
+  {
+    title: 'Building performant single page applications',
+    source: 'The Guardian',
+    date: '2026-02-10',
+    excerpt: 'Best practices and techniques for creating responsive, fast-loading single page applications without compromising user experience.',
+    url: 'https://www.theguardian.com/technology/2026/feb/10/spa-performance',
+    tags: ['Performance', 'Frontend']
+  }
+];
 
 // ========================================
 // Blog Data
@@ -1866,14 +2094,17 @@ function initializeFeaturedPosts() {
   const featuredPosts = document.getElementById('featuredPosts');
   if (!featuredPosts) return;
 
-  const featured = posts.slice(0, 3);
-
-  featured.forEach((post, index) => {
-    const card = document.createElement('article');
+  featuredArticles.forEach((article, index) => {
+    const card = document.createElement('a');
     card.className = 'featured-card';
     card.setAttribute('role', 'article');
+    card.href = article.url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+    card.style.textDecoration = 'none';
+    card.style.color = 'inherit';
 
-    const dateObj = new Date(post.date);
+    const dateObj = new Date(article.date);
     const formattedDate = dateObj.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -1882,20 +2113,23 @@ function initializeFeaturedPosts() {
 
     card.innerHTML = `
       <div class="featured-card-date">${formattedDate}</div>
-      <h3>${post.title}</h3>
-      <p>${post.content.split('\n')[0].replace(/^# /, '').substring(0, 100)}...</p>
-      <div class="featured-card-tags">
-        ${post.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+      <h3>${article.title}</h3>
+      <p>${article.excerpt}</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+        <div class="featured-card-tags">
+          ${article.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
+        </div>
+        <small style="color: var(--accent-primary); font-size: 12px; font-weight: 500;">${article.source}</small>
       </div>
     `;
 
-    card.addEventListener('click', () => showArticle(post));
     featuredPosts.appendChild(card);
   });
 }
 
 renderPosts();
 initializeFeaturedPosts();
+updateLanguageUI(); // Update UI text based on current language
 router(location.pathname);
 
 // Performance monitoring
@@ -1918,7 +2152,7 @@ if ('PerformanceObserver' in window) {
 // ========================================
 // TYPING ANIMATION EFFECT
 // ========================================
-const words = ['Clarity.', 'Precision.', 'Experience.'];
+const words = ['Hello, Nice To Meet You!'];
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -1928,7 +2162,7 @@ const typingElement = document.getElementById('typingText');
 
 function typeEffect() {
   const currentWord = words[wordIndex];
-  
+
   if (isDeleting) {
     // Delete characters
     typingElement.textContent = currentWord.substring(0, charIndex - 1);
@@ -1940,19 +2174,19 @@ function typeEffect() {
     charIndex++;
     typingSpeed = 150; // Normal typing speed
   }
-  
+
   // Check if word is complete
   if (!isDeleting && charIndex === currentWord.length) {
     // Pause at end of word
-    typingSpeed = 2000; // 2 second pause
+    typingSpeed = 1500; // 1.5 second pause for longer phrase
     isDeleting = true;
   } else if (isDeleting && charIndex === 0) {
-    // Move to next word
+    // Move to next word (cycles single phrase)
     isDeleting = false;
     wordIndex = (wordIndex + 1) % words.length; // Loop back to start
-    typingSpeed = 500; // Brief pause before next word
+    typingSpeed = 500; // Brief pause before next repeat
   }
-  
+
   setTimeout(typeEffect, typingSpeed);
 }
 

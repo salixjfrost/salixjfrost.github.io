@@ -440,7 +440,15 @@ body {
 <body>
 
 <div class="container">
-  <a href="/" class="back-link">← Back to Home</a>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <a href="/" class="back-link">← Back to Home</a>
+    <select id="languageSelector" class="language-selector" onchange="setLanguage(this.value)" style="padding: 8px 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; transition: all var(--transition-fast); min-width: 130px;">
+      <option value="en">English</option>
+      <option value="ja">日本語</option>
+      <option value="zh_CN">简体中文</option>
+      <option value="zh_TW">繁體中文</option>
+    </select>
+  </div>
   
   <div class="header">
     <h1>About Me</h1>
@@ -608,25 +616,256 @@ body {
 </div>
 
 <script>
+// Language & Translations System
+const aboutTranslations = {
+  en: {
+    back_link: '← Back to Home',
+    about_title: 'About Me',
+    about_subtitle: 'Developer · Architect · Problem Solver',
+    profile_p1: 'Hello! I\'m SalixWen, an engineer dedicated to system architecture and high-quality software development.',
+    profile_p2: 'I believe that excellent software is not just code that runs, but carefully designed systems that stand the test of time, are easy to maintain and extend. My work philosophy is built on three core principles: Clarity, Precision, and Experience.',
+    profile_p3: 'Here I share my thoughts and experiences on web development, system design, security practices, and technical architecture, hoping to help more developers build better software.',
+    skills_title: 'Technical Expertise',
+    skill_frontend: 'Frontend Development',
+    skill_frontend_desc: 'Creating high-performance, user-friendly modern web applications with attention to detail and user experience.',
+    skill_architecture: 'System Architecture',
+    skill_architecture_desc: 'Designing scalable, maintainable system architecture while balancing performance and development efficiency.',
+    skill_security: 'Security Practices',
+    skill_security_desc: 'Building secure and reliable applications following security best practices and industry standards.',
+    skill_performance: 'Performance Optimization',
+    skill_performance_desc: 'Optimizing application performance and improving user experience with full-stack optimization.',
+    journey_title: 'Journey',
+    timeline_1_date: '2024 - Present',
+    timeline_1_role: 'Senior Developer & Architect',
+    timeline_1_desc: 'Focused on building high-performance web applications and system architecture design, promoting technical innovation and best practices.',
+    timeline_2_date: '2022 - 2024',
+    timeline_2_role: 'Full-Stack Developer',
+    timeline_2_desc: 'Participated in multiple large-scale projects, accumulating rich full-stack development and team collaboration experience.',
+    timeline_3_date: '2020 - 2022',
+    timeline_3_role: 'Frontend Developer',
+    timeline_3_desc: 'Deep learning of modern frontend technology stack, mastering mainstream frameworks like React and Vue, focusing on code quality and performance optimization.',
+    timeline_4_date: '2018 - 2020',
+    timeline_4_role: 'Starting the Journey',
+    timeline_4_desc: 'Starting my programming journey, learning computer science fundamentals, building a solid technical foundation.',
+    values_title: 'Core Values',
+    value_quality: 'Quality First',
+    value_quality_desc: 'Pursuing code quality and engineering excellence, no compromise on technical debt.',
+    value_user: 'User-Centric',
+    value_user_desc: 'Always keeping user experience at the center, creating intuitive and easy-to-use products.',
+    value_learning: 'Continuous Learning',
+    value_learning_desc: 'Maintaining curiosity, continuously learning new technologies and best practices.',
+    value_collab: 'Collaboration',
+    value_collab_desc: 'Valuing team collaboration, sharing knowledge, and growing together.',
+    connect_title: 'Let\'s Connect',
+    connect_msg: 'Feel free to reach out through the following channels'
+  },
+  ja: {
+    back_link: '← ホームに戻る',
+    about_title: '私について',
+    about_subtitle: '開発者 · アーキテクト · 問題解決者',
+    profile_p1: 'こんにちは！SalixWenです。システムアーキテクチャと高品質なソフトウェア開発に特化したエンジニアです。',
+    profile_p2: '優れたソフトウェアは単なる実行可能なコードではなく、時間の試練に耐え、保守と拡張が容易なよく設計されたシステムであると信じています。仕事哲学は3つの中核原則に基づいています：明確性（Clarity）、精密性（Precision）、経験（Experience）。',
+    profile_p3: 'ここではWeb開発、システム設計、セキュリティプラクティス、技術アーキテクチャについての思考と経験を共有し、より多くの開発者がより良いソフトウェアを構築するのを支援したいと思っています。',
+    skills_title: '技術専門知識',
+    skill_frontend: 'フロントエンド開発',
+    skill_frontend_desc: '細部とユーザー体験に注意を払いながら、高性能でユーザーフレンドリーな最新Web アプリケーションを作成します。',
+    skill_architecture: 'システムアーキテクチャ',
+    skill_architecture_desc: 'パフォーマンスと開発効率のバランスを取りながら、スケーラブルで保守可能なシステムアーキテクチャを設計します。',
+    skill_security: 'セキュリティ実践',
+    skill_security_desc: 'セキュリティのベストプラクティスと業界標準に従い、安全で信頼性の高いアプリケーションを構築します。',
+    skill_performance: 'パフォーマンス最適化',
+    skill_performance_desc: 'フルスタック最適化によりアプリケーションのパフォーマンスを向上させ、ユーザー体験を改善します。',
+    journey_title: 'キャリア',
+    timeline_1_date: '2024年～現在',
+    timeline_1_role: 'シニア開発者 & アーキテクト',
+    timeline_1_desc: '高性能なWebアプリケーション開発とシステムアーキテクチャ設計に力を入れ、技術革新とベストプラクティスを推進しています。',
+    timeline_2_date: '2022～2024年',
+    timeline_2_role: 'フルスタック開発者',
+    timeline_2_desc: '複数の大規模プロジェクトに参加し、豊富なフルスタック開発とチーム協力の経験を積みました。',
+    timeline_3_date: '2020～2022年',
+    timeline_3_role: 'フロントエンド開発者',
+    timeline_3_desc: '最新のフロントエンド技術スタックを深く学習し、ReactやVueなどの主流フレームワークを習得し、コード品質とパフォーマンス最適化に力を入れました。',
+    timeline_4_date: '2018～2020年',
+    timeline_4_role: 'ジャーニー開始',
+    timeline_4_desc: 'プログラミングへの旅を開始し、コンピュータサイエンスの基礎知識を学び、堅固な技術基盤を構築しました。',
+    values_title: 'コア価値観',
+    value_quality: '品質第一',
+    value_quality_desc: 'コード品質とエンジニアリング卓越性を追求し、技術的負債にはいかなる妥協もしません。',
+    value_user: 'ユーザー中心',
+    value_user_desc: 'ユーザー体験を常に中心に置き、直感的で使いやすい製品を作成します。',
+    value_learning: '継続的な学習',
+    value_learning_desc: '好奇心を忘れず、新しい技術とベストプラクティスを継続的に学んでいます。',
+    value_collab: 'コラボレーション',
+    value_collab_desc: 'チームコラボレーションを大切にし、知識を共有し、一緒に成長します。',
+    connect_title: 'つながりましょう',
+    connect_msg: '以下のチャネルからお気軽にお問い合わせください'
+  },
+  zh_CN: {
+    back_link: '← 返回主页',
+    about_title: '关于我',
+    about_subtitle: '开发者 · 架构师 ·问题解决者',
+    profile_p1: '你好！我是 SalixWen，一名专注于系统架构与高质量软件开发的工程师。',
+    profile_p2: '我相信优秀的软件不仅仅是能够运行的代码，而是能够经受时间考验、易于维护和扩展的精心设计的系统。我的工作理念建立在三个核心原则之上：清晰性（Clarity）、精确性（Precision）和经验积累（Experience）。',
+    profile_p3: '在这里，我分享关于 Web 开发、系统设计、安全实践和技术架构的思考与经验，希望能够帮助更多开发者构建更好的软件。',
+    skills_title: '技术专长',
+    skill_frontend: '前端开发',
+    skill_frontend_desc: '创建高性能、用户友好的现代 Web 应用，注重细节和用户体验。',
+    skill_architecture: '系统架构',
+    skill_architecture_desc: '设计可扩展、可维护的系统架构，平衡性能与开发效率。',
+    skill_security: '安全实践',
+    skill_security_desc: '构建安全可靠的应用，遵循安全最佳实践和行业标准。',
+    skill_performance: '性能优化',
+    skill_performance_desc: '优化应用性能，提升用户体验，从前端到后端全栈优化。',
+    journey_title: '职业经历',
+    timeline_1_date: '2024 - 至今',
+    timeline_1_role: '高级开发者 & 架构师',
+    timeline_1_desc: '专注于构建高性能 Web 应用和系统架构设计，推动技术创新和最佳实践。',
+    timeline_2_date: '2022 - 2024',
+    timeline_2_role: '全栈开发者',
+    timeline_2_desc: '参与多个大型项目开发，积累了丰富的全栈开发和团队协作经验。',
+    timeline_3_date: '2020 - 2022',
+    timeline_3_role: '前端开发者',
+    timeline_3_desc: '深入学习现代前端技术栈，掌握 React、Vue 等主流框架，注重代码质量和性能优化。',
+    timeline_4_date: '2018 - 2020',
+    timeline_4_role: '开始编程之旅',
+    timeline_4_desc: '开始编程之旅，学习计算机科学基础知识，建立扎实的技术功底。',
+    values_title: '核心价值观',
+    value_quality: '质量优先',
+    value_quality_desc: '追求代码质量和工程卓越，不妥协于技术债务。',
+    value_user: '以用户为中心',
+    value_user_desc: '始终以用户体验为中心，创建直观易用的产品。',
+    value_learning: '持续学习',
+    value_learning_desc: '保持好奇心，不断学习新技术和最佳实践。',
+    value_collab: '团队协作',
+    value_collab_desc: '重视团队合作，分享知识，共同成长。',
+    connect_title: '取得联系',
+    connect_msg: '欢迎通过以下方式与我联系交流'
+  },
+  zh_TW: {
+    back_link: '← 返回主頁',
+    about_title: '關於我',
+    about_subtitle: '開發者 · 架構師 · 問題解決者',
+    profile_p1: '你好！我是 SalixWen，一名專注於系統架構與高質量軟體開發的工程師。',
+    profile_p2: '我相信優秀的軟體不僅僅是能夠運行的程式碼，而是能夠經受時間考驗、易於維護和擴展的精心設計的系統。我的工作理念建立在三個核心原則之上：清晰性（Clarity）、精確性（Precision）和經驗積累（Experience）。',
+    profile_p3: '在這裡，我分享關於 Web 開發、系統設計、安全實踐和技術架構的思考與經驗，希望能夠幫助更多開發者構建更好的軟體。',
+    skills_title: '技術專長',
+    skill_frontend: '前端開發',
+    skill_frontend_desc: '建立高效能、使用者友善的現代 Web 應用程式，注重細節和使用者體驗。',
+    skill_architecture: '系統架構',
+    skill_architecture_desc: '設計可擴展、可維護的系統架構，平衡效能與開發效率。',
+    skill_security: '安全實踐',
+    skill_security_desc: '建構安全可靠的應用程式，遵循安全最佳實踐和業界標準。',
+    skill_performance: '效能優化',
+    skill_performance_desc: '優化應用程式效能，提升使用者體驗，從前端到後端全棧優化。',
+    journey_title: '職業經歷',
+    timeline_1_date: '2024 - 至今',
+    timeline_1_role: '資深開發者 & 架構師',
+    timeline_1_desc: '專注於建構高效能 Web 應用和系統架構設計，推動技術創新和最佳實踐。',
+    timeline_2_date: '2022 - 2024',
+    timeline_2_role: '全端開發者',
+    timeline_2_desc: '參與多個大型專案開發，積累了豐富的全端開發和團隊協作經驗。',
+    timeline_3_date: '2020 - 2022',
+    timeline_3_role: '前端開發者',
+    timeline_3_desc: '深入學習現代前端技術棧，掌握 React、Vue 等主流框架，注重程式碼品質和效能優化。',
+    timeline_4_date: '2018 - 2020',
+    timeline_4_role: '開始編程之旅',
+    timeline_4_desc: '開始編程之旅，學習計算機科學基礎知識，建立扎實的技術功底。',
+    values_title: '核心價值觀',
+    value_quality: '品質優先',
+    value_quality_desc: '追求程式碼品質和工程卓越，不妥協於技術債務。',
+    value_user: '以使用者為中心',
+    value_user_desc: '始終以使用者體驗為中心，建立直觀易用的產品。',
+    value_learning: '持續學習',
+    value_learning_desc: '保持好奇心，不斷學習新技術和最佳實踐。',
+    value_collab: '團隊協作',
+    value_collab_desc: '重視團隊合作，分享知識，共同成長。',
+    connect_title: '取得聯繫',
+    connect_msg: '歡迎透過以下方式與我聯絡交流'
+  }
+};
+
+// Get language from localStorage or detect from browser
+let currentLanguage = localStorage.getItem('language') || 'en';
+if (!['en', 'ja', 'zh_CN', 'zh_TW'].includes(currentLanguage)) {
+  currentLanguage = 'en';
+}
+
+function getTranslation(key) {
+  return aboutTranslations[currentLanguage]?.[key] || aboutTranslations.en[key] || key;
+}
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem('language', lang);
+  updateAboutLanguageUI();
+}
+
+function updateAboutLanguageUI() {
+  // Update heading
+  document.querySelector('h1').textContent = getTranslation('about_title');
+  document.querySelector('.header p').textContent = getTranslation('about_subtitle');
+
+  // Profile intro
+  const profileIntro = document.querySelector('.profile-intro');
+  if (profileIntro) {
+    profileIntro.innerHTML = `
+      <p>${getTranslation('profile_p1')}</p>
+      <p style="margin-top: 16px;">${getTranslation('profile_p2')}</p>
+      <p style="margin-top: 16px;">${getTranslation('profile_p3')}</p>
+    `;
+  }
+
+  // Skills
+  document.querySelector('.skills-section .section-title').textContent = getTranslation('skills_title');
+  const skillCards = document.querySelectorAll('.skill-card');
+  const skillKeys = ['skill_frontend', 'skill_architecture', 'skill_security', 'skill_performance'];
+  const skillDescKeys = ['skill_frontend_desc', 'skill_architecture_desc', 'skill_security_desc', 'skill_performance_desc'];
+  skillCards.forEach((card, idx) => {
+    card.querySelector('h3').textContent = getTranslation(skillKeys[idx]);
+    card.querySelector('p').textContent = getTranslation(skillDescKeys[idx]);
+  });
+
+  // Timeline
+  document.querySelector('.timeline-section .section-title').textContent = getTranslation('journey_title');
+  const timelineItems = document.querySelectorAll('.timeline-item .timeline-content');
+  const dateKeys = ['timeline_1_date', 'timeline_2_date', 'timeline_3_date', 'timeline_4_date'];
+  const roleKeys = ['timeline_1_role', 'timeline_2_role', 'timeline_3_role', 'timeline_4_role'];
+  const descKeys = ['timeline_1_desc', 'timeline_2_desc', 'timeline_3_desc', 'timeline_4_desc'];
+  timelineItems.forEach((item, idx) => {
+    item.querySelector('.timeline-date').textContent = getTranslation(dateKeys[idx]);
+    item.querySelector('h3').textContent = getTranslation(roleKeys[idx]);
+    item.querySelector('p').textContent = getTranslation(descKeys[idx]);
+  });
+
+  // Values
+  document.querySelector('.values-section .section-title').textContent = getTranslation('values_title');
+  const valueCards = document.querySelectorAll('.value-card');
+  const valueKeys = ['value_quality', 'value_user', 'value_learning', 'value_collab'];
+  const valueDescKeys = ['value_quality_desc', 'value_user_desc', 'value_learning_desc', 'value_collab_desc'];
+  valueCards.forEach((card, idx) => {
+    card.querySelector('h3').textContent = getTranslation(valueKeys[idx]);
+    card.querySelector('p').textContent = getTranslation(valueDescKeys[idx]);
+  });
+
+  // Contact
+  document.querySelector('.contact-section .section-title').textContent = getTranslation('connect_title');
+  document.querySelector('.contact-section > p').textContent = getTranslation('connect_msg');
+
+  // Back link
+  document.querySelector('.back-link').textContent = getTranslation('back_link');
+
+  // Language selector
+  document.getElementById('languageSelector').value = currentLanguage;
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', updateAboutLanguageUI);
+
 // Dark mode detection
-if (localStorage.getItem('theme') === 'dark' || 
+if (localStorage.getItem('theme') === 'dark' ||
     (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
   document.body.classList.add('dark');
 }
-
-// Smooth scroll for hash links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-console.log('✨ About page loaded');
-</script>
 
 </body>
 </html>
