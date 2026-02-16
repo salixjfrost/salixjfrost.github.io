@@ -861,6 +861,31 @@ body.dark .grid-background {
 }
 
 /* ========================================
+   About Me Section
+   ======================================== */
+.about-me-content {
+  max-width: 700px;
+  padding: var(--spacing-xl);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+}
+
+.about-me-content p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-md);
+}
+
+.about-me-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
    Search & Filters
    ======================================== */
 .search-container {
@@ -1377,8 +1402,8 @@ body.dark .article pre {
   <div class="logo">SalixWen</div>
   <div class="nav-links">
     <a href="/" data-link aria-label="Navigate to home page">Home</a>
-    <a href="/blog/" aria-label="Navigate to blog posts">Blog</a>
-    <a href="about/" aria-label="Navigate to about page">About</a>
+    <a href="/blog" data-link aria-label="Navigate to blog posts">Blog</a>
+    <a href="/about" aria-label="Navigate to about page">About</a>
     <div class="theme-toggle-wrapper">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
         <span class="toggle-icon-sun"></span>
@@ -1421,15 +1446,18 @@ body.dark .article pre {
       </h1>
       <p>Say my <span class="animated-emoji" id="heroEmoji">✨</span> name.</p>
       <div class="hero-cta">
-        <a href="/blog/" class="cta-button primary">Explore Articles</a>
-        <a href="/about/" class="cta-button secondary">Learn More</a>
+        <a href="/blog" class="cta-button primary">Explore Articles</a>
+        <a href="/about" class="cta-button secondary">Learn More</a>
       </div>
     </div>
 
-    <!-- Featured Section -->
+    <!-- About Me Section -->
     <div class="featured-section">
-      <h2>Latest Articles</h2>
-      <div class="featured-grid" id="featuredPosts"></div>
+      <h2 id="aboutMeHeading">About Me</h2>
+      <div class="about-me-content">
+        <p id="aboutMeIntro">Hi, I'm SalixWen, a passionate developer focused on web technologies, system architecture, and security. I love exploring new technologies and sharing insights through writing.</p>
+        <p id="aboutMeInterests">My interests span across frontend development, WebGL graphics, performance optimization, and building elegant solutions to complex problems.</p>
+      </div>
     </div>
   </div>
 
@@ -1637,7 +1665,7 @@ function router(path) {
   
   // Activate appropriate page
   let activePage = 'home';
-  if (path === '/projects') {
+  if (path === '/blog' || path === '/projects') {
     activePage = 'projects';
   } else if (path.startsWith('/post')) {
     activePage = 'articlePage';
@@ -1649,8 +1677,8 @@ function router(path) {
   // Update active nav link
   const navMap = {
     'home': '/',
-    'projects': '/projects',
-    'articlePage': '/projects'
+    'projects': '/blog',
+    'articlePage': '/blog'
   };
   
   const activeLink = document.querySelector(`nav a[href="${navMap[activePage]}"]`);
@@ -1714,6 +1742,9 @@ const translations = {
     hero_cta_explore: 'Explore Articles',
     hero_cta_learn: 'Learn More',
     featured_heading: 'Latest Articles',
+    about_me_heading: 'About Me',
+    about_me_intro: "Hi, I'm SalixWen, a passionate developer focused on web technologies, system architecture, and security. I love exploring new technologies and sharing insights through writing.",
+    about_me_interests: "My interests span across frontend development, WebGL graphics, performance optimization, and building elegant solutions to complex problems.",
     back_button: '← Back',
     blog_heading: 'Blog',
     blog_tagline: 'Technical insights about web development, architecture, and security',
@@ -1730,6 +1761,9 @@ const translations = {
     hero_cta_explore: '浏览文章',
     hero_cta_learn: '了解更多',
     featured_heading: '最新文章',
+    about_me_heading: '关于我',
+    about_me_intro: '你好，我是 SalixWen，一名热衷于 Web 技术、系统架构和安全的开发者。我喜欢探索新技术，并通过写作分享见解。',
+    about_me_interests: '我的兴趣涵盖前端开发、WebGL 图形、性能优化，以及为复杂问题构建优雅的解决方案。',
     back_button: '← 返回',
     blog_heading: '博客',
     blog_tagline: '关于网页开发、架构和安全的技术见解',
@@ -1768,7 +1802,7 @@ function updateLanguageUI() {
   // Nav links
   document.querySelectorAll('nav a').forEach(link => {
     if (link.getAttribute('href') === '/') link.textContent = getTranslation('nav_home');
-    else if (link.getAttribute('href') === '/blog/') link.textContent = getTranslation('nav_blog');
+    else if (link.getAttribute('href') === '/blog') link.textContent = getTranslation('nav_blog');
     else if (link.getAttribute('href').includes('about')) link.textContent = getTranslation('nav_about');
   });
 
@@ -1792,6 +1826,16 @@ function updateLanguageUI() {
   const featuredHeading = document.querySelector('.featured-section h2');
   if (featuredHeading) featuredHeading.textContent = getTranslation('featured_heading');
 
+  // About Me section
+  const aboutMeHeading = document.getElementById('aboutMeHeading');
+  if (aboutMeHeading) aboutMeHeading.textContent = getTranslation('about_me_heading');
+
+  const aboutMeIntro = document.getElementById('aboutMeIntro');
+  if (aboutMeIntro) aboutMeIntro.textContent = getTranslation('about_me_intro');
+
+  const aboutMeInterests = document.getElementById('aboutMeInterests');
+  if (aboutMeInterests) aboutMeInterests.textContent = getTranslation('about_me_interests');
+
   // Back button
   const backButton = document.querySelector('.back-button');
   if (backButton) backButton.innerHTML = getTranslation('back_button');
@@ -1810,35 +1854,7 @@ function updateLanguageUI() {
   if (emptyState) emptyState.querySelector('p').textContent = getTranslation('empty_state');
 }
 
-// ========================================
-// Featured External Articles
-// ========================================
-const featuredArticles = [
-  {
-    title: 'The future of web development with AI assistants',
-    source: 'TechCrunch',
-    date: '2026-02-12',
-    excerpt: 'Exploring how AI is transforming the web development landscape and helping developers build faster, smarter applications.',
-    url: 'https://techcrunch.com/2026/02/12/ai-web-development/',
-    tags: ['AI', 'Web Development']
-  },
-  {
-    title: 'Understanding modern browser security features',
-    source: 'BBC News',
-    date: '2026-02-11',
-    excerpt: 'A deep dive into the latest security improvements in modern web browsers and how they protect your data while browsing.',
-    url: 'https://www.bbc.com/future/article/20260211-browser-security',
-    tags: ['Security', 'Browsers']
-  },
-  {
-    title: 'Building performant single page applications',
-    source: 'The Guardian',
-    date: '2026-02-10',
-    excerpt: 'Best practices and techniques for creating responsive, fast-loading single page applications without compromising user experience.',
-    url: 'https://www.theguardian.com/technology/2026/feb/10/spa-performance',
-    tags: ['Performance', 'Frontend']
-  }
-];
+
 
 // ========================================
 // Blog Data
@@ -2102,7 +2118,7 @@ function addStructuredData(article) {
 // Navigation Functions
 // ========================================
 function navigateBack() {
-  navigate('/projects');
+  navigate('/blog');
 }
 
 // ========================================
@@ -2131,45 +2147,7 @@ window.addEventListener('offline', () => {
 // ========================================
 // Initialize
 // ========================================
-function initializeFeaturedPosts() {
-  const featuredPosts = document.getElementById('featuredPosts');
-  if (!featuredPosts) return;
-
-  featuredArticles.forEach((article, index) => {
-    const card = document.createElement('a');
-    card.className = 'featured-card';
-    card.setAttribute('role', 'article');
-    card.href = article.url;
-    card.target = '_blank';
-    card.rel = 'noopener noreferrer';
-    card.style.textDecoration = 'none';
-    card.style.color = 'inherit';
-
-    const dateObj = new Date(article.date);
-    const formattedDate = dateObj.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-
-    card.innerHTML = `
-      <div class="featured-card-date">${formattedDate}</div>
-      <h3>${article.title}</h3>
-      <p>${article.excerpt}</p>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-        <div class="featured-card-tags">
-          ${article.tags.map(tag => `<span class="featured-tag">${tag}</span>`).join('')}
-        </div>
-        <small style="color: var(--accent-primary); font-size: 12px; font-weight: 500;">${article.source}</small>
-      </div>
-    `;
-
-    featuredPosts.appendChild(card);
-  });
-}
-
 renderPosts();
-initializeFeaturedPosts();
 updateLanguageUI(); // Update UI text based on current language
 router(location.pathname);
 
