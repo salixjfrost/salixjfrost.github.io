@@ -57,13 +57,11 @@
 <nav role="navigation" aria-label="Main navigation">
   <div class="logo">SalixWen</div>
   <div class="nav-links">
-    <a href="/" data-link aria-label="Navigate to home page">Home</a>
-    <a href="/about" aria-label="Navigate to about page">About</a>
-    <div class="language-selector-wrapper">
-      <select id="languageSelector" class="language-selector" onchange="setLanguage(this.value)" aria-label="Select language">
-        <option value="en">English</option>
-        <option value="zh_CN">简体中文</option>
-      </select>
+    <a href="/" data-link data-i18n="nav_home" aria-label="Navigate to home page">Home</a>
+    <a href="/about" data-i18n="nav_about" aria-label="Navigate to about page">About</a>
+    <div class="language-toggle">
+      <button class="lang-btn" data-lang="en" aria-label="Switch to English">EN</button>
+      <button class="lang-btn" data-lang="zh" aria-label="切换到中文">中文</button>
     </div>
   </div>
   <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
@@ -92,9 +90,10 @@
           <span id="typingText" class="typing-text"></span>
         </span>
       </h1>
-      <p>Welcome to my digital space.</p>
+      <blockquote class="hero-quote" data-i18n="hero_quote_loading">Loading quote...</blockquote>
       <div class="hero-cta">
-        <a href="/about" class="cta-button primary">Learn More</a>
+        <a href="/about" class="cta-button primary" data-i18n="hero_cta_learn">Learn More</a>
+        <a href="https://github.com/SalixJFrost" class="cta-button secondary" data-i18n="hero_cta_github" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </div>
   </div>
@@ -105,9 +104,9 @@
 <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
 <!-- Scripts -->
-<script src="js/shader-background.js"></script>
-<script src="js/i18n.js"></script>
-<script src="js/main.js"></script>
+<script src="js/shader-background.js?v=5"></script>
+<script src="js/i18n.js?v=5"></script>
+<script src="js/main.js?v=5"></script>
 
 </body>
 </html>

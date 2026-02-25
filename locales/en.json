@@ -1,0 +1,10 @@
+{
+  "nav_home": "Home",
+  "nav_about": "About",
+  "hero_title": "Hello, Nice To Meet You!",
+  "hero_subtitle": "Welcome to my digital space.",
+  "hero_cta_learn": "Learn More",
+  "hero_cta_github": "GitHub",
+  "hero_quote_loading": "Loading quote...",
+  "hero_quote_error": "Failed to load quote. Please refresh the page."
+}

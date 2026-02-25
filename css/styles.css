@@ -261,6 +261,51 @@ body.dark .language-selector option {
 }
 
 /* ========================================
+   Language Toggle Buttons
+   ======================================== */
+.language-toggle {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-left: var(--spacing-md);
+  padding: 4px;
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border);
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+  color: var(--text-primary);
+  background: var(--accent-light);
+}
+
+.lang-btn.active {
+  color: var(--accent-primary);
+  background: var(--accent-light);
+}
+
+.lang-btn:focus {
+  outline: none;
+}
+
+.lang-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
    Mobile Menu
    ======================================== */
 .mobile-menu-toggle {
@@ -336,7 +381,33 @@ body.dark .language-selector option {
   color: var(--text-secondary);
   font-weight: 400;
   letter-spacing: 0.5px;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero-quote {
+  font-size: var(--font-size-base);
+  color: var(--text-tertiary);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  margin: var(--spacing-xl) 0;
+  padding-left: var(--spacing-lg);
+  border-left: 3px solid var(--card-border);
+  opacity: 0.8;
+  transition: opacity var(--transition-base);
+}
+
+.hero-quote:hover {
+  opacity: 1;
+}
+
+.hero-quote::after {
+  content: attr(data-author);
+  display: block;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  opacity: 0.7;
 }
 
 /* Hero CTA Buttons */
@@ -362,16 +433,16 @@ body.dark .language-selector option {
 }
 
 .cta-button.primary {
-  background: var(--accent-primary);
-  color: white;
-  border-color: var(--accent-primary);
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--card-border);
 }
 
 .cta-button.primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background: var(--card-bg);
+  border-color: var(--text-primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(29, 155, 240, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .cta-button.secondary {

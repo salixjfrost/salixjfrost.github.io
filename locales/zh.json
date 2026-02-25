@@ -1,0 +1,10 @@
+{
+  "nav_home": "首页",
+  "nav_about": "关于",
+  "hero_title": "你好，很高兴认识你！",
+  "hero_subtitle": "欢迎来到我的数字空间。",
+  "hero_cta_learn": "了解更多",
+  "hero_cta_github": "GitHub",
+  "hero_quote_loading": "加载格言中...",
+  "hero_quote_error": "格言加载失败，请刷新页面。"
+}

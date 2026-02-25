@@ -440,13 +440,7 @@ body {
 <body>
 
 <div class="container">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-    <a href="/" class="back-link">← Back to Home</a>
-    <select id="languageSelector" class="language-selector" onchange="setLanguage(this.value)" style="padding: 8px 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; transition: all var(--transition-fast); min-width: 130px;">
-      <option value="en">English</option>
-      <option value="zh_CN">简体中文</option>
-    </select>
-  </div>
+  <a href="/" class="back-link">← Back to Home</a>
   
   <div class="header">
     <h1>About Me</h1>
@@ -782,20 +776,11 @@ const aboutTranslations = {
   }
 };
 
-// Get language from localStorage or detect from browser
-let currentLanguage = localStorage.getItem('language') || 'en';
-if (!['en', 'zh_CN'].includes(currentLanguage)) {
-  currentLanguage = 'en';
-}
+// Get language from localStorage (set by main page)
+let currentLanguage = localStorage.getItem('lang') || 'zh';
 
 function getTranslation(key) {
-  return aboutTranslations[currentLanguage]?.[key] || aboutTranslations.en[key] || key;
-}
-
-function setLanguage(lang) {
-  currentLanguage = lang;
-  localStorage.setItem('language', lang);
-  updateAboutLanguageUI();
+  return aboutTranslations[currentLanguage]?.[key] || aboutTranslations.zh_CN[key] || key;
 }
 
 function updateAboutLanguageUI() {
@@ -851,9 +836,6 @@ function updateAboutLanguageUI() {
 
   // Back link
   document.querySelector('.back-link').textContent = getTranslation('back_link');
-
-  // Language selector
-  document.getElementById('languageSelector').value = currentLanguage;
 }
 
 // Initialize on load

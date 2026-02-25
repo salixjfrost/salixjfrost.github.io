@@ -200,7 +200,8 @@ function restartTypingEffect() {
 // Initialize
 // ========================================
 window.addEventListener('load', () => {
-  updateLanguageUI();
+  initLanguage();
+  fetchRandomQuote();
   router(location.pathname);
   setTimeout(typeEffect, 500);
   
